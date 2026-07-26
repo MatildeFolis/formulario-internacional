@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InvitArte — Your invitation starts here</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sage:#7A9E7A;--sage-light:#B8CEB8;--sage-pale:#EEF3EE;--sage-dark:#4E6E4E;
+  --cream:#FAFAF7;--warm:#F5F0E8;--text:#1E1E1A;--muted:#7A7A70;
+  --border:rgba(30,30,26,0.1);--bstrong:rgba(30,30,26,0.2);--white:#FFFFFF;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text);font-size:15px;line-height:1.7;min-height:100vh}
+.header{text-align:center;padding:3rem 1.5rem 2rem}
+.header::after{content:'';display:block;width:40px;height:1px;background:var(--sage-light);margin:1.5rem auto 0}
+.logo{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;letter-spacing:0.08em;color:var(--text)}
+.logo span{color:var(--sage)}
+.tagline{font-size:12px;font-weight:300;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;margin-top:6px}
+.progress-wrap{max-width:540px;margin:0 auto 2.5rem;padding:0 1.5rem}
+.progress-labels{display:flex;justify-content:space-between;margin-bottom:8px}
+.plabel{font-size:11px;color:var(--muted);letter-spacing:0.04em;transition:color .3s}
+.plabel.active{color:var(--sage-dark);font-weight:500}
+.pbar{height:1.5px;background:var(--border);border-radius:2px;overflow:hidden}
+.pfill{height:100%;background:linear-gradient(90deg,var(--sage-light),var(--sage));border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.step-count{text-align:center;font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:0.05em}
+.form-wrap{max-width:540px;margin:0 auto;padding:0 1.5rem 5rem}
+.section{display:none}
+.section.active{display:block;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:400;color:var(--text);margin-bottom:6px;line-height:1.25}
+.sec-sub{font-size:13px;color:var(--muted);margin-bottom:2rem;font-weight:300;line-height:1.6}
+.field{margin-bottom:1.5rem}
+.field label{display:block;font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.field input,.field select,.field textarea{width:100%;font-family:'Jost',sans-serif;font-size:14px;padding:13px 16px;border-radius:12px;border:0.5px solid var(--bstrong);background:var(--white);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(122,158,122,0.1)}
+.field textarea{resize:vertical;min-height:90px;line-height:1.6}
+.field small{display:block;font-size:12px;color:var(--muted);margin-top:6px;font-weight:300;line-height:1.5}
+.field small a{color:var(--sage);text-decoration:none}
+.field small a:hover{text-decoration:underline}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.radio-group{display:flex;flex-direction:column;gap:10px}
+.ropt{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:12px;border:0.5px solid var(--bstrong);background:var(--white);cursor:pointer;transition:all .2s;user-select:none}
+.ropt:hover{border-color:var(--sage-light);background:var(--sage-pale)}
+.ropt.sel{border-color:var(--sage);background:var(--sage-pale)}
+.rdot{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--bstrong);flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ropt.sel .rdot{border-color:var(--sage);background:var(--sage)}
+.ropt.sel .rdot::after{content:'';width:6px;height:6px;border-radius:50%;background:white;display:block}
+.rtext{font-size:14px;color:var(--text);line-height:1.4}
+.rdesc{font-size:12px;color:var(--muted);margin-top:3px;font-weight:300;line-height:1.4}
+.rprice{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--sage-dark);margin-top:4px}
+.rbadge{display:inline-block;font-size:10px;background:var(--sage);color:white;padding:2px 8px;border-radius:20px;letter-spacing:.06em;margin-left:6px;vertical-align:middle}
+.check-group{display:flex;flex-direction:column;gap:10px}
+.copt{display:flex;align-items:center;gap:12px;padding:0;border-radius:12px;border:0.5px solid var(--bstrong);background:var(--white);cursor:pointer;transition:all .2s;user-select:none;overflow:hidden}
+.copt:hover{border-color:var(--sage-light)}
+.copt.chk{border-color:var(--sage);background:var(--sage-pale)}
+.copt-img{width:90px;height:90px;object-fit:cover;flex-shrink:0}
+.copt-info{flex:1;padding:12px 14px 12px 0}
+.copt-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
+.copt-price{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--sage-dark)}
+.cbox{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--bstrong);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:11px;font-weight:600;margin-right:14px}
+.copt.chk .cbox{background:var(--sage);border-color:var(--sage);color:white}
+.extras-box{display:none;margin-top:1.25rem;padding:1.25rem;background:var(--sage-pale);border-radius:14px;border:0.5px solid var(--sage-light);animation:fadeUp .3s ease}
+.extras-box.show{display:block}
+.extras-title{font-size:11px;font-weight:500;color:var(--sage-dark);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+.nav{display:flex;gap:12px;margin-top:2rem}
+.btn-next{flex:1;font-family:'Jost',sans-serif;font-size:14px;font-weight:400;padding:15px 24px;border-radius:30px;border:none;background:var(--sage);color:white;cursor:pointer;transition:all .25s;letter-spacing:0.06em}
+.btn-next:hover{background:var(--sage-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(78,110,78,0.25)}
+.btn-back{font-family:'Jost',sans-serif;font-size:14px;padding:15px 20px;border-radius:30px;border:0.5px solid var(--bstrong);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+.btn-back:hover{background:var(--warm);color:var(--text)}
+.pago-box{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1.5rem}
+.pago-title{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:.875rem}
+.pago-alias{font-family:monospace;background:var(--warm);padding:3px 8px;border-radius:6px;font-size:13px}
+.acepto-wrap{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:12px;border:0.5px solid var(--bstrong);background:var(--white);cursor:pointer;margin-bottom:1.5rem;transition:all .2s;user-select:none}
+.acepto-wrap.chk{border-color:var(--sage);background:var(--sage-pale)}
+.acepto-wrap.chk .cbox{background:var(--sage) !important;border-color:var(--sage) !important}
+.acepto-wrap.chk .cbox::after{content:"✓";font-size:12px;font-weight:700;color:white;line-height:1;display:block}
+.acepto-text{font-size:13px;color:var(--muted);line-height:1.6}
+.acepto-text strong{color:var(--text)}
+.confirm{display:none;text-align:center;padding:1rem 0 3rem;animation:fadeUp .5s ease}
+.confirm.show{display:block}
+.confirm-icon{width:70px;height:70px;border-radius:50%;background:var(--sage-pale);border:1px solid var(--sage-light);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:30px}
+.confirm-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:400;color:var(--text);margin-bottom:8px;line-height:1.25}
+.confirm-sub{font-size:14px;color:var(--muted);font-weight:300;margin-bottom:2rem;line-height:1.7;max-width:380px;margin-left:auto;margin-right:auto}
+.confirm-card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1.5rem;text-align:left}
+.crow{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:0.5px solid var(--border);gap:16px}
+.crow:last-child{border-bottom:none;padding-bottom:0}
+.ck{font-size:12px;color:var(--muted);flex-shrink:0}
+.cv{font-size:13px;color:var(--text);text-align:right}
+.wsp-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;border-radius:30px;background:#25D366;color:white;font-family:'Jost',sans-serif;font-size:14px;font-weight:500;border:none;cursor:pointer;text-decoration:none;transition:all .2s;margin-bottom:12px}
+.wsp-btn:hover{background:#1DA851;transform:translateY(-1px)}
+.note-final{font-size:12px;color:var(--muted);font-weight:300;line-height:1.6}
+.sending{display:none;text-align:center;padding:3rem 0}
+.sending.show{display:block}
+.spinner{width:36px;height:36px;border:2px solid var(--sage-light);border-top-color:var(--sage);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-msg{display:none;background:#FEF2F2;border:0.5px solid #FECACA;border-radius:12px;padding:1rem 1.25rem;color:#991B1B;font-size:13px;margin-top:1rem;line-height:1.6}
+.error-msg.show{display:block}
+@media(max-width:480px){.field-row{grid-template-columns:1fr}.header{padding:2rem 1.5rem 1.5rem}.logo{font-size:28px}.sec-title{font-size:24px}.copt-img{width:75px;height:75px}}
+
+.precio-resumen{background:var(--white);border:0.5px solid var(--sage-light);border-radius:14px;padding:1.25rem;margin-top:1.5rem}
+.precio-title{font-size:11px;font-weight:500;color:var(--sage-dark);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:1rem}
+.precio-row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);padding:5px 0;border-bottom:0.5px solid var(--border)}
+.precio-row:last-of-type{border-bottom:none}
+.precio-row.total{font-size:15px;font-weight:500;color:var(--text);padding-top:10px;margin-top:4px;border-top:0.5px solid var(--bstrong);border-bottom:none}
+.precio-row.senia{color:var(--sage-dark);font-weight:500}
+.precio-val{font-family:'Cormorant Garamond',serif;font-size:16px}
+.precio-row.total .precio-val{font-size:20px}
+.pago-opciones{display:flex;flex-direction:column;gap:8px;margin-top:1rem}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">Invit<span>Arte</span></div>
+  <div class="tagline">Tu invitación empieza acá</div>
+</div>
+<div class="progress-wrap" id="prog-wrap">
+  <div class="progress-labels">
+    <span class="plabel active" id="pl-1" onclick="jumpTo(1)" style="cursor:pointer">Contacto</span>
+    <span class="plabel" id="pl-2" onclick="jumpTo(2)" style="cursor:pointer">Evento</span>
+    <span class="plabel" id="pl-3" onclick="jumpTo(3)" style="cursor:pointer">Detalles</span>
+    <span class="plabel" id="pl-4" onclick="jumpTo(4)" style="cursor:pointer">Plan</span>
+    <span class="plabel" id="pl-5" onclick="jumpTo(5)" style="cursor:pointer">Diseño</span>
+    <span class="plabel" id="pl-6" onclick="jumpTo(6)" style="cursor:pointer">Extras</span>
+    <span class="plabel" id="pl-7" onclick="jumpTo(7)" style="cursor:pointer">Pago</span>
+  </div>
+  <div class="pbar"><div class="pfill" id="pfill" style="width:16%"></div></div>
+  <div class="step-count" id="step-count">Paso 1 de 6</div>
+</div>
+<div class="form-wrap">
+
+  <!-- SEC 1 -->
+  <div class="section active" id="sec-1">
+    <div class="sec-title">Hola, contanos quién sos 🌿</div>
+    <div class="sec-sub">Primero te vamos a enviar un diseño preliminar para que lo revises y apruebes.</div>
+    <div class="field"><label>Nombre y apellido *</label><input type="text" id="f-nombre" placeholder="Tu nombre completo"></div>
+    <div class="field"><label>WhatsApp *</label><input type="tel" id="f-wsp" placeholder="Ej: 3415123456"><small>Por acá te enviamos el diseño preliminar 💌</small></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Tipo de evento *</label>
+      <div class="radio-group">
+        <label class="ropt" onclick="selR(this,'tipo','Boda')"><div class="rdot"></div><div><div class="rtext">Boda</div></div></label>
+        <label class="ropt" onclick="selR(this,'tipo','15 años')"><div class="rdot"></div><div><div class="rtext">15 años</div></div></label>
+        <label class="ropt" onclick="selR(this,'tipo','Otro')"><div class="rdot"></div><div><div class="rtext">Otro evento</div><div class="rdesc">Cumpleaños, aniversario, bautismo...</div></div></label>
+      </div>
+    </div>
+    <div class="nav"><button class="btn-next" onclick="goNext(1)">Continuar →</button></div>
+  </div>
+
+  <!-- SEC 2 -->
+  <div class="section" id="sec-2">
+    <div class="sec-title">Los datos del evento 📅</div>
+    <div class="sec-sub">Todo lo que tus invitados van a necesitar saber.</div>
+    <div class="field"><label>Nombres en la portada *</label><input type="text" id="f-prot" placeholder='Ej: "Marti – Mis XV" o "Lola y Juan"'><small>Tal como querés que aparezcan en la invitación</small></div>
+    <div class="field-row">
+      <div class="field"><label>Fecha del evento *</label><input type="text" id="f-fecha" placeholder="Ej: 15/09/2026"></div>
+      <div class="field"><label>Horario</label><input type="text" id="f-horario" placeholder="Ej: 20:30 hs"></div>
+    </div>
+    <div class="field"><label>Ubicación</label><textarea id="f-ubic" placeholder="Nombre del salón y dirección. Si hay varios lugares (iglesia, civil, salón) detallá cada uno con su horario. Podés pegar el link de Google Maps."></textarea></div>
+    <div class="nav">
+      <button class="btn-back" onclick="goBack(2)">← Volver</button>
+      <button class="btn-next" onclick="goNext(2)">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- SEC 3 -->
+  <div class="section" id="sec-3">
+    <div class="sec-title">Los detallitos ✨</div>
+    <div class="sec-sub">Personalizá tu invitación con estos extras.</div>
+    <div class="field"><label>Música de fondo</label><input type="text" id="f-musica" placeholder="Pegá el link de YouTube de la canción"></div>
+    <div class="field">
+      <label>Cuenta regresiva</label>
+      <div class="radio-group">
+        <label class="ropt" onclick="selR(this,'cuenta_reg','Sí')"><div class="rdot"></div><div><div class="rtext">Sí, quiero cuenta regresiva</div><div class="rdesc">Se configura automáticamente con la fecha del evento</div></div></label>
+        <label class="ropt" onclick="selR(this,'cuenta_reg','No')"><div class="rdot"></div><div><div class="rtext">No</div></div></label>
+      </div>
+    </div>
+    <div class="field"><label>Datos para regalos</label>
+      <textarea id="f-regalos" placeholder="Podés incluir datos bancarios (alias, número de cuenta, titular) o el link a tu lista de regalos (Amazon, Tienda Nube, MercadoPago, etc.). Si no querés incluir esta sección dejalo vacío."></textarea></div>
+    <div class="field"><label>Dress code</label><input type="text" id="f-dresscode" placeholder="Ej: Elegante sport. Evitar color blanco."></div>
+    <div class="field">
+      <label>Confirmación de asistencia</label>
+      <div class="sec-sub" style="margin-bottom:10px;font-size:12px">Te vamos a enviar un link especial donde tus invitados confirman y las respuestas se cargan automáticamente en una planilla. Solo indicanos si preferís recibirlas por WhatsApp o formulario.</div>
+      <div class="radio-group">
+        <label class="ropt" onclick="selR(this,'asistencia_tipo','WhatsApp');showWsp(true)"><div class="rdot"></div><div><div class="rtext">Por WhatsApp</div><div class="rdesc">Tus invitados confirman con un mensaje predeterminado</div></div></label>
+        <label class="ropt" onclick="selR(this,'asistencia_tipo','Formulario');showWsp(false)"><div class="rdot"></div><div><div class="rtext">Formulario de Google</div><div class="rdesc">Recibís una planilla con todas las confirmaciones ordenadas</div></div></label>
+      </div>
+      <div id="asist-wsp-wrap" style="display:none;margin-top:10px"><input type="tel" id="f-asist-num" placeholder="Número de WhatsApp para confirmaciones"></div>
+    </div>
+    <div class="field">
+      <label>Fecha límite para confirmar asistencia</label>
+      <input type="text" id="f-fecha-limite" placeholder="Ej: 15/08/2026">
+      <small>Si no tenés una fecha definida podés dejarlo vacío</small>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="goBack(3)">← Volver</button>
+      <button class="btn-next" onclick="goNext(3)">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- SEC 4 -->
+  <div class="section" id="sec-4">
+    <div class="sec-title">Elegí tu invitación 💌</div>
+    <div class="sec-sub">Cada plan incluye todo lo anterior más los extras detallados.</div>
+    <div class="radio-group">
+      <label class="ropt" onclick="selPlan(this,'Clásica')">
+        <div class="rdot"></div>
+        <div style="flex:1">
+          <div class="rtext" style="font-weight:500">Clásica</div>
+          <div class="rdesc">Música · Mapa · Regalos · Dress code · Cuenta regresiva · Confirmación de asistencia</div>
+          <div class="rprice">USD 35</div>
+        </div>
+      </label>
+      <label class="ropt" onclick="selPlan(this,'Premium')">
+        <div class="rdot"></div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
+            <div class="rtext" style="font-weight:500">Premium</div>
+            <span class="rbadge">MÁS ELEGIDO</span>
+          </div>
+          <div class="rdesc">Todo lo anterior + Álbum colaborativo · Galería de fotos · Google Calendar · Instagram · Sugerencia de canciones · Secciones adicionales</div>
+          <div class="rprice">USD 46</div>
+        </div>
+      </label>
+      <label class="ropt" onclick="selPlan(this,'Inteligente')">
+        <div class="rdot"></div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
+            <div class="rtext" style="font-weight:500">Invitación Inteligente 🤖</div>
+            <span class="rbadge" style="background:#474f2e">NOVEDAD</span>
+          </div>
+          <div class="rdesc">Todo lo de Premium + un asistente virtual que responde las dudas de tus invitados al instante.</div>
+          <div class="rprice">USD 59</div>
+        </div>
+      </label>
+      <label class="ropt" onclick="selPlan(this,'Desde Cero')">
+        <div class="rdot"></div>
+        <div style="flex:1">
+          <div class="rtext" style="font-weight:500">Desde Cero ✨</div>
+          <div class="rdesc">Diseño exclusivo y único. Incluye todo Premium + secciones especiales a medida.</div>
+          <div class="rprice">USD 65</div>
+        </div>
+      </label>
+    </div>
+
+    <div class="precio-resumen" id="precio-resumen" style="display:none">
+      <div class="precio-title">Resumen de precios</div>
+      <div class="precio-row"><span>Plan elegido</span><span class="precio-val" id="pr-plan">—</span></div>
+      <div class="precio-row"><span>Papelería</span><span class="precio-val" id="pr-papel">—</span></div>
+      <div class="precio-row total"><span>Total</span><span class="precio-val" id="pr-total">—</span></div>
+      <div class="precio-row senia"><span>Seña mínima (50%)</span><span class="precio-val" id="pr-senia">—</span></div>
+    </div>
+    <div class="extras-box" id="extras-premium">
+      <div class="extras-title">Extras Premium — completá lo que aplique</div>
+      <div class="field">
+        <label>Álbum colaborativo de fotos</label>
+        <div class="radio-group" style="margin-bottom:10px">
+          <label class="ropt" onclick="selR(this,'album','Sí');showAlbum(true)"><div class="rdot"></div><div><div class="rtext">Sí, quiero álbum colaborativo</div></div></label>
+          <label class="ropt" onclick="selR(this,'album','No');showAlbum(false)"><div class="rdot"></div><div><div class="rtext">No</div></div></label>
+        </div>
+        <div id="album-wrap" style="display:none">
+          <div style="margin-bottom:12px;border-radius:12px;overflow:hidden;background:#000">
+            <iframe width="100%" height="200" src="https://www.youtube.com/embed/OqE2ARLrn1w" frameborder="0" allowfullscreen style="display:block;border-radius:12px"></iframe>
+          </div>
+          <small style="display:block;margin-bottom:10px">Seguí los pasos del video y pegá el link acá abajo. Si preferís, podés pedírnoslo por WhatsApp y te ayudamos 💌</small>
+          <input type="text" id="f-album-link" placeholder="Pegá el link del álbum de Google Photos">
+        </div>
+      </div>
+      <div class="field">
+        <label>Galería de fotos de los protagonistas</label>
+        <div class="radio-group">
+          <label class="ropt" onclick="selR(this,'galeria','Sí')"><div class="rdot"></div><div><div class="rtext">Sí</div><div class="rdesc">Mandanos entre 2 y 8 fotos por WhatsApp</div></div></label>
+          <label class="ropt" onclick="selR(this,'galeria','No')"><div class="rdot"></div><div><div class="rtext">No</div></div></label>
+        </div>
+      </div>
+      <div class="field">
+        <label>Agendar en Google Calendar</label>
+        <div class="radio-group">
+          <label class="ropt" onclick="selR(this,'calendar','Sí')"><div class="rdot"></div><div><div class="rtext">Sí</div></div></label>
+          <label class="ropt" onclick="selR(this,'calendar','No')"><div class="rdot"></div><div><div class="rtext">No</div></div></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Sugerencia de canciones</label>
+        <div class="radio-group">
+          <label class="ropt" onclick="selR(this,'sug_canciones','Sí');showSug(true)"><div class="rdot"></div><div><div class="rtext">Sí</div></div></label>
+          <label class="ropt" onclick="selR(this,'sug_canciones','No');showSug(false)"><div class="rdot"></div><div><div class="rtext">No</div></div></label>
+        </div>
+        <div id="sug-wrap" style="display:none;margin-top:10px">
+          <div class="radio-group">
+            <label class="ropt" onclick="selR(this,'sug_tipo','WhatsApp');document.getElementById('sug-cel-wrap').style.display='block';document.getElementById('sug-link-wrap').style.display='none'"><div class="rdot"></div><div><div class="rtext">Por WhatsApp / celular</div><div class="rdesc">Tus invitados te mandan la canción por mensaje directo</div></div></label>
+            <label class="ropt" onclick="selR(this,'sug_tipo','Formulario');document.getElementById('sug-cel-wrap').style.display='none';document.getElementById('sug-link-wrap').style.display='none'"><div class="rdot"></div><div><div class="rtext">Por formulario</div><div class="rdesc">Recibís un link donde cargan la canción y las respuestas van a una hoja automáticamente</div></div></label>
+            <label class="ropt" onclick="selR(this,'sug_tipo','Spotify');document.getElementById('sug-cel-wrap').style.display='none';document.getElementById('sug-link-wrap').style.display='block'"><div class="rdot"></div><div><div class="rtext">Lista colaborativa de Spotify</div><div class="rdesc">Compartís una playlist y tus invitados agregan sus canciones</div></div></label>
+            <label class="ropt" onclick="selR(this,'sug_tipo','YouTube');document.getElementById('sug-cel-wrap').style.display='none';document.getElementById('sug-link-wrap').style.display='block'"><div class="rdot"></div><div><div class="rtext">Lista colaborativa de YouTube</div><div class="rdesc">Compartís una lista de YouTube donde tus invitados pueden sumar canciones</div></div></label>
+          </div>
+          <div id="sug-cel-wrap" style="display:none;margin-top:10px"><input type="tel" id="f-sug-canc" placeholder="Número de WhatsApp para recibir las sugerencias"></div>
+          <div id="sug-link-wrap" style="display:none;margin-top:10px"><input type="text" id="f-sug-link" placeholder="Pegá el link de la lista colaborativa"></div>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0"><label>Secciones especiales</label><textarea id="f-secciones" placeholder="Cronograma del día, alojamiento, valor de tarjeta, evento sin niños, traslados, mensaje de agradecimiento..."></textarea></div>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="goBack(4)">← Volver</button>
+      <button class="btn-next" onclick="goNext(4)">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- SEC 5 -->
+  <div class="section" id="sec-5">
+    <div class="sec-title">El diseño 🎨</div>
+    <div class="sec-sub">Contanos cómo imaginás tu invitación.</div>
+    <div class="field">
+      <label>Modelo elegido</label>
+      <input type="text" id="f-modelo" placeholder="Ej: Sakura, Lirios, Greenery, Pasaporte...">
+      <small>¿No recordás el nombre? No hay problema — mandanos una captura del modelo por WhatsApp al finalizar 💕</small>
+    </div>
+    <div class="field"><label>Frase especial</label><textarea id="f-frase" placeholder="La frase que querés que aparezca destacada en tu invitación"></textarea></div>
+    <div class="field"><label>Algo más sobre el diseño</label><textarea id="f-diseno" placeholder="Colores, tipografías, estilo, referencias, ideas... Cualquier detalle que quieras contarnos 💕"></textarea></div>
+    <div class="field">
+      <label>Papelería imprimible (opcional)</label>
+      <small style="margin-bottom:12px;display:block">Diseño digital en PDF listo para imprimir. Seleccioná lo que te interesa:</small>
+      <div class="check-group">
+        <label class="copt" onclick="togChk(this)">
+          <img src="QR__1_.png" class="copt-img" alt="Tarjetas QR">
+          <div class="copt-info"><div class="copt-name">Tarjetas con QR para fotos</div><div class="copt-price">USD 6</div></div>
+          <div class="cbox"></div>
+        </label>
+        <label class="copt" onclick="togChk(this)">
+          <img src="NMesa__1_.png" class="copt-img" alt="Números de mesa">
+          <div class="copt-info"><div class="copt-name">Números de mesa del 1 al 15</div><div class="copt-price">USD 6</div></div>
+          <div class="cbox"></div>
+        </label>
+        <label class="copt" onclick="togChk(this)">
+          <img src="Agradec__1_.png" class="copt-img" alt="Tarjetitas agradecimiento">
+          <div class="copt-info"><div class="copt-name">Tarjetitas de agradecimiento (9 por hoja A4)</div><div class="copt-price">USD 5</div></div>
+          <div class="cbox"></div>
+        </label>
+        <label class="copt" onclick="togChk(this)">
+          <img src="menu__1_.png" class="copt-img" alt="Menús de mesa">
+          <div class="copt-info"><div class="copt-name">Menús de mesa</div><div class="copt-price">USD 6</div></div>
+          <div class="cbox"></div>
+        </label>
+        <label class="copt" onclick="togChk(this)">
+          <img src="cartel_b.png" class="copt-img" alt="Cartel bienvenida">
+          <div class="copt-info"><div class="copt-name">Cartel de bienvenida 50x70 cm</div><div class="copt-price">USD 4</div></div>
+          <div class="cbox"></div>
+        </label>
+        <label class="copt" onclick="togChk(this)">
+          <img src="toppers__1_.png" class="copt-img" alt="Toppers Candy Bar">
+          <div class="copt-info"><div class="copt-name">Toppers Candy Bar</div><div class="copt-price">USD 5</div></div>
+          <div class="cbox"></div>
+        </label>
+        <label class="copt" onclick="togChk(this)">
+          <img src="busca_tu_mesa.png" class="copt-img" alt="Cartel Buscá tu mesa">
+          <div class="copt-info"><div class="copt-name">Cartel Buscá tu mesa</div><div class="copt-price">USD 7</div></div>
+          <div class="cbox"></div>
+        </label>
+        <label class="copt" onclick="togChk(this)">
+          <img src="kit__1_.png" class="copt-img" alt="Kit de baño">
+          <div class="copt-info"><div class="copt-name">Kit de baño</div><div class="copt-price">USD 7</div></div>
+          <div class="cbox"></div>
+        </label>
+        <label class="copt" onclick="togChk(this)">
+          <img src="monograma__1_.jpg" class="copt-img" alt="Monograma">
+          <div class="copt-info"><div class="copt-name">Monograma personalizado</div><div class="copt-price">USD 4</div></div>
+          <div class="cbox"></div>
+        </label>
+      </div>
+    </div>
+    <div class="field"><label>¿Querés sumar algún complemento especial?</label><input type="text" id="f-complementos" placeholder="Ej: place cards, etiquetas, cronograma... lo cotizamos"></div>
+    <div class="nav">
+      <button class="btn-back" onclick="goBack(5)">← Volver</button>
+      <button class="btn-next" onclick="goNext(5)">Continuar →</button>
+    </div>
+  </div>
+
+
+  <!-- SEC 6 - EXTRAS DIGITALES -->
+  <div class="section" id="sec-6">
+    <div class="sec-title">Extras digitales ✨</div>
+    <div class="sec-sub">Sumá algo único a tu invitación. Podés elegir uno o los dos.</div>
+    <div class="radio-group">
+      <label class="ropt" onclick="togExtra(this,'Trivia interactiva')">
+        <div class="rdot"></div>
+        <div style="flex:1">
+          <div class="rtext" style="font-weight:500">🎮 Trivia interactiva "¿Me conocés?"</div>
+          <div class="rdesc">Una página web con 5 preguntas sobre la festejada, con link directo desde la invitación. Tus invitados juegan y descubren cuánto la conocen.</div>
+          <div class="rprice">USD 7</div>
+        </div>
+      </label>
+      <label class="ropt" onclick="togExtra(this,'Pases individuales')">
+        <div class="rdot"></div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
+            <div class="rtext" style="font-weight:500">🎟️ Pases individuales personalizados</div>
+          </div>
+          <div class="rdesc">Cada invitado recibe una imagen personalizada con su nombre, cantidad de pases y QR de acceso a la invitación.</div>
+          <div class="rprice">USD 14</div>
+        </div>
+      </label>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="goBack(6)">← Volver</button>
+      <button class="btn-next" onclick="goNext(6)">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- SEC 7 -->
+  <div class="section" id="sec-7">
+    <div class="sec-title">Casi listo 🌿</div>
+    <div class="sec-sub">Para comenzar necesitamos una seña del 50% del valor del plan elegido.</div>
+    <div class="precio-resumen" style="margin-bottom:1.25rem">
+      <div class="precio-title">Tu resumen de pago</div>
+      <div id="pago-calc" style="font-size:13px;color:var(--muted)">Completá el plan y la papelería para ver el total.</div>
+    </div>
+    <div class="field">
+      <label>¿Cómo querés abonar?</label>
+      <div class="radio-group pago-opciones">
+        <label class="ropt" onclick="selR(this,'pago_tipo','Seña 50%')"><div class="rdot"></div><div><div class="rtext">Seña del 50%</div><div class="rdesc">Abonás la mitad ahora y el resto al aprobar el diseño final</div></div></label>
+        <label class="ropt" onclick="selR(this,'pago_tipo','Total')"><div class="rdot"></div><div><div class="rtext">Pago total</div><div class="rdesc">Abonás el total ahora</div></div></label>
+      </div>
+    </div>
+    <div class="pago-box">
+      <div class="pago-title">Forma de pago — PayPal</div>
+      <div style="font-size:14px;color:var(--text);line-height:2.1">
+        Una vez que recibamos tu formulario, te enviamos el link de pago de <strong>PayPal</strong> por WhatsApp con el monto exacto en USD.
+      </div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:0.5px solid var(--border);font-size:13px;color:var(--muted);line-height:1.6">📲 Al recibir tu pago confirmamos tu lugar y comenzamos con el diseño 💌</div>
+    </div>
+    <div class="field"><label>¿Algo más que quieras contarnos?</label><textarea id="f-extra" placeholder="Cualquier detalle que no hayas mencionado antes 💕"></textarea></div>
+    <div class="field">
+      <label>¿Cómo nos conociste?</label>
+      <select id="f-como">
+        <option value="">Seleccioná una opción</option>
+        <option>Instagram</option>
+        <option>Recomendación de un amigo/a</option>
+        <option>Google</option>
+        <option>TikTok</option>
+        <option>Pinterest</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    <div class="acepto-wrap" id="acepto-wrap" onclick="togAcepto()">
+      <div class="cbox" id="acepto-box"></div>
+      <div class="acepto-text">Leí y acepto la <strong>política de modificaciones</strong> de InvitArte. Una vez enviado el diseño preliminar, tenés <strong>3 rondas de cambios</strong> para ajustarlo. Al aprobar el diseño final se abona el saldo restante y se entrega el link. Cualquier modificación posterior tendrá un costo adicional.</div>
+    </div>
+    <div class="error-msg" id="error-msg">Por favor aceptá la política de modificaciones para continuar.</div>
+    <div class="nav">
+      <button class="btn-back" onclick="goBack(7)">← Volver</button>
+      <button class="btn-next" onclick="enviar()" style="background:var(--sage-dark)">Enviar mi formulario 💌</button>
+    </div>
+  </div>
+
+  <!-- ENVIANDO -->
+  <div class="sending" id="sending">
+    <div class="spinner"></div>
+    <div style="font-size:14px;color:var(--muted);font-weight:300">Enviando tu formulario...</div>
+  </div>
+
+  <!-- CONFIRMACIÓN -->
+  <div class="confirm" id="confirm">
+    <div class="confirm-icon">💌</div>
+    <div class="confirm-title">¡Gracias por confiar en nosotras!</div>
+    <div class="confirm-sub">Recibimos todos tus datos. Vamos a preparar tu diseño preliminar y te lo enviamos por WhatsApp para que lo revises. Una vez que lo apruebes, recibirás tu invitación final lista para compartir 🌿</div>
+    <div class="confirm-card" id="confirm-resumen"></div>
+    <a class="wsp-btn" id="wsp-btn" href="#" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Avisarnos por WhatsApp
+    </a>
+    <div class="note-final">Si elegiste un modelo y no recordás el nombre, mandanos una captura por WhatsApp 📸</div>
+  </div>
+
+</div>
+
+<script>
+const FORM_URL='https://script.google.com/macros/s/AKfycbwipNZ155oWZmx18goor7z-HiXETvMm0iR-gS6uIlI_T4pvcql-a9pVR7F1fbXCKsJv/exec';
+const WSP_NUM='5493329624344';
+const vals={};
+
+const PRECIOS_PLAN = { 'Clásica': 35, 'Premium': 46, 'Desde Cero': 65, 'Inteligente': 59 };
+
+
+const PRECIOS_PAPEL = {
+  'Tarjetas con QR para fotos': 6,
+  'Números de mesa del 1 al 15': 6,
+  'Tarjetitas de agradecimiento (9 por hoja A4)': 5,
+  'Menús de mesa': 6,
+  'Cartel de bienvenida 50x70 cm': 4,
+  'Toppers Candy Bar': 5,
+  'Monograma personalizado': 4,
+  'Cartel Buscá tu mesa': 7,
+  'Kit de baño': 7,
+  'Trivia interactiva': 7,
+  'Pases individuales': 14
+};
+
+function formatPeso(n){ return 'USD ' + n; }
+
+function calcTotal(){
+  const plan = vals.plan || '';
+  const planPrecio = PRECIOS_PLAN[plan] || 0;
+  let papelTotal = 0;
+  document.querySelectorAll('.copt.chk').forEach(el => {
+    const name = el.querySelector('.copt-name').textContent.trim();
+    papelTotal += PRECIOS_PAPEL[name] || 0;
+  });
+  let extrasTotal = 0;
+  extrasDigitales.forEach(val => { extrasTotal += PRECIOS_PAPEL[val] || 0; });
+  return { planPrecio, papelTotal, extrasTotal, total: planPrecio + papelTotal + extrasTotal };
+}
+
+function updateResumen(){
+  const { planPrecio, papelTotal, extrasTotal, total } = calcTotal();
+  const senia = Math.ceil(total * 0.5);
+  const el = document.getElementById('precio-resumen');
+  if(el){
+    if(total === 0){ el.style.display='none'; }
+    else { el.style.display='block'; }
+  }
+  document.getElementById('pr-plan').textContent = vals.plan ? formatPeso(planPrecio) : '—';
+  document.getElementById('pr-papel').textContent = (papelTotal+extrasTotal) > 0 ? formatPeso(papelTotal+extrasTotal) : '—';
+  document.getElementById('pr-total').textContent = formatPeso(total);
+  document.getElementById('pr-senia').textContent = formatPeso(senia);
+  const pagoEl = document.getElementById('pago-calc');
+  if(pagoEl){
+    pagoEl.innerHTML = `
+      <div class="precio-row"><span>Plan ${vals.plan||''}</span><span class="precio-val">${formatPeso(planPrecio)}</span></div>
+      ${papelTotal>0?`<div class="precio-row"><span>Papelería</span><span class="precio-val">${formatPeso(papelTotal)}</span></div>`:''}
+      ${extrasTotal>0?`<div class="precio-row"><span>Extras digitales</span><span class="precio-val">${formatPeso(extrasTotal)}</span></div>`:''}
+      <div class="precio-row total"><span>Total</span><span class="precio-val">${formatPeso(total)}</span></div>
+      <div class="precio-row senia"><span>Seña mínima (50%)</span><span class="precio-val">${formatPeso(senia)}</span></div>
+    `;
+  }
+}
+
+let aceptado=false;
+const stepProg=[14,28,42,57,71,85,100];
+
+function updateProg(s){
+  document.getElementById('pfill').style.width=stepProg[s-1]+'%';
+  document.getElementById('step-count').textContent=`Paso ${s} de 7`;
+  for(let i=1;i<=7;i++){ const el=document.getElementById('pl-'+i); if(el) el.classList.toggle('active',i<=s); }
+}
+
+function goNext(from){
+  if(from===1){
+    if(!document.getElementById('f-nombre').value.trim()){alert('Por favor ingresá tu nombre y apellido.');return;}
+    if(!document.getElementById('f-wsp').value.trim()){alert('Por favor ingresá tu número de WhatsApp.');return;}
+    if(!vals.tipo){alert('Por favor seleccioná el tipo de evento.');return;}
+  }
+  if(from===2){
+    if(!document.getElementById('f-prot').value.trim()){alert('Por favor ingresá los nombres para la portada.');return;}
+    if(!document.getElementById('f-fecha').value.trim()){alert('Por favor ingresá la fecha del evento.');return;}
+  }
+  document.getElementById('sec-'+from).classList.remove('active');
+  document.getElementById('sec-'+(from+1)).classList.add('active');
+  updateProg(from+1);
+  if(from+1 === 7) updateResumen();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goBack(from){
+  document.getElementById('sec-'+from).classList.remove('active');
+  document.getElementById('sec-'+(from-1)).classList.add('active');
+  updateProg(from-1);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function selR(el,key,val){
+  const g=el.closest('.radio-group');
+  if(g) g.querySelectorAll('.ropt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  vals[key]=val;
+}
+
+const extrasDigitales = new Set();
+function togExtra(el, val) {
+  el.classList.toggle('sel');
+  const dot = el.querySelector('.rdot');
+  if(el.classList.contains('sel')) {
+    extrasDigitales.add(val);
+    if(dot) { dot.style.borderColor='var(--sage)'; dot.style.background='var(--sage)'; }
+  } else {
+    extrasDigitales.delete(val);
+    if(dot) { dot.style.borderColor=''; dot.style.background=''; }
+  }
+  updateResumen();
+}
+function selPlan(el,plan){
+  document.querySelectorAll('[onclick*="selPlan"]').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  vals.plan=plan;
+  updateResumen();
+  const e=document.getElementById('extras-premium');
+  if(plan==='Premium'||plan==='Desde Cero'||plan==='Inteligente') e.classList.add('show');
+  else e.classList.remove('show');
+}
+
+function togChk(el){el.classList.toggle('chk');updateResumen();}
+
+function togAcepto(){
+  aceptado=!aceptado;
+  document.getElementById('acepto-wrap').classList.toggle('chk',aceptado);
+  document.getElementById('acepto-box').classList.toggle('chk',aceptado);
+}
+
+function showWsp(show){
+  document.getElementById('asist-wsp-wrap').style.display=show?'block':'none';
+}
+function showAlbum(show){document.getElementById('album-wrap').style.display=show?'block':'none';}
+function showSug(show){document.getElementById('sug-wrap').style.display=show?'block':'none';}
+
+function getPapeleria(){
+  const r=[];
+  document.querySelectorAll('.copt.chk').forEach(el=>{
+    r.push(el.querySelector('.copt-name').textContent.trim());
+  });
+  return r.join(', ');
+}
+
+async function enviar(){
+  if(!aceptado){document.getElementById('error-msg').classList.add('show');return;}
+  document.getElementById('error-msg').classList.remove('show');
+  const asistNum=document.getElementById('f-asist-num').value.trim();
+  const asistFull=(vals.asistencia_tipo||'')+(asistNum?' — '+asistNum:'');
+  const payload={
+    nombre:document.getElementById('f-nombre').value.trim(),
+    wsp:document.getElementById('f-wsp').value.trim(),
+    tipo:vals.tipo||'',
+    protagonistas:document.getElementById('f-prot').value.trim(),
+    fecha:document.getElementById('f-fecha').value.trim(),
+    horario:document.getElementById('f-horario').value.trim(),
+    ubicacion:document.getElementById('f-ubic').value.trim(),
+    musica:document.getElementById('f-musica').value.trim(),
+    cuenta_reg:vals.cuenta_reg||'',
+    regalos:document.getElementById('f-regalos').value.trim(),
+    dresscode:document.getElementById('f-dresscode').value.trim(),
+    asistencia:asistFull+' — Fecha límite: '+(document.getElementById('f-fecha-limite').value.trim()||'No indicada'),
+    plan:vals.plan||'',
+    album:vals.album||'',
+    link_album:document.getElementById('f-album-link').value.trim(),
+    galeria:vals.galeria||'',
+    calendar:vals.calendar||'',
+    sug_canciones:(vals.sug_canciones||'')+(document.getElementById('f-sug-canc')&&document.getElementById('f-sug-canc').value.trim()?' — '+document.getElementById('f-sug-canc').value.trim():'')+(document.getElementById('f-sug-link')&&document.getElementById('f-sug-link').value.trim()?' — '+document.getElementById('f-sug-link').value.trim():''),
+    secciones_extra:document.getElementById('f-secciones').value.trim(),
+    modelo:document.getElementById('f-modelo').value.trim(),
+    frase:document.getElementById('f-frase').value.trim(),
+    notas_dis:document.getElementById('f-diseno').value.trim(),
+    papeleria:getPapeleria(),
+    complementos:document.getElementById('f-complementos').value.trim(),
+    detalle_extra:document.getElementById('f-extra').value.trim(),
+    como_conocio:document.getElementById('f-como').value,
+    acepto:'Leí y acepto la política de modificaciones de InvitArte.',
+    extras_digitales:Array.from(extrasDigitales).join(', '),
+    pago_tipo:vals.pago_tipo||''
+  };
+  document.getElementById('sec-7').classList.remove('active');
+  document.getElementById('prog-wrap').style.display='none';
+  document.getElementById('sending').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+  try{
+    await fetch(FORM_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  }catch(e){console.log('Enviado');}
+  document.getElementById('sending').classList.remove('show');
+  const modelo=payload.modelo;
+  document.getElementById('confirm-resumen').innerHTML=`
+    <div class="crow"><span class="ck">Nombre</span><span class="cv">${payload.nombre}</span></div>
+    <div class="crow"><span class="ck">Protagonistas</span><span class="cv">${payload.protagonistas}</span></div>
+    <div class="crow"><span class="ck">Fecha</span><span class="cv">${payload.fecha}</span></div>
+    <div class="crow"><span class="ck">Tipo</span><span class="cv">${payload.tipo}</span></div>
+    <div class="crow"><span class="ck">Plan</span><span class="cv">${payload.plan}</span></div>
+    <div class="crow"><span class="ck">Modelo</span><span class="cv">${modelo||'Enviás captura por WhatsApp 📸'}</span></div>
+    ${payload.extras_digitales?`<div class="crow"><span class="ck">Extras digitales</span><span class="cv">${payload.extras_digitales}</span></div>`:''}
+    ${(()=>{const {total,planPrecio,papelTotal,extrasTotal}=calcTotal();const senia=Math.ceil(total*0.5);const pago=vals.pago_tipo||'Seña 50%';const monto=pago==='Total'?total:senia;return total>0?`<div class="crow"><span class="ck">Total</span><span class="cv">${formatPeso(total)}</span></div><div class="crow" style="color:var(--sage-dark)"><span class="ck">A transferir (${pago})</span><span class="cv" style="font-weight:500;font-family:'Cormorant Garamond',serif;font-size:16px">${formatPeso(monto)}</span></div>`:'';})()}
+  `;
+  const msg=encodeURIComponent(`Hola chicas! 💌 Completé el formulario para mi invitación.\n\nNombre: ${payload.nombre}\nProtagonistas: ${payload.protagonistas}\nFecha: ${payload.fecha}\nPlan: ${payload.plan}\n`+(modelo?`Modelo: ${modelo}`:`(Les mando captura del modelo por acá 📸)`));
+  document.getElementById('wsp-btn').href=`https://wa.me/${WSP_NUM}?text=${msg}`;
+  document.getElementById('confirm').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function jumpTo(step) {
+  // Only allow jumping to steps already visited
+  const current = parseInt(document.querySelector('.section.active').id.replace('sec-',''));
+  if(step > current) return;
+  document.getElementById('sec-'+current).classList.remove('active');
+  document.getElementById('sec-'+step).classList.add('active');
+  updateProg(step);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
